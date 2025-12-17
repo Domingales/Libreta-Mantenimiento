@@ -1,0 +1,1398 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Libreta Mantenimiento – Centros Aceituna</title>
+  <style>
+    :root{
+      --bg:#0b1220;
+      --panel:#111a2e;
+      --panel2:#0f172a;
+      --text:#e5e7eb;
+      --muted:#9ca3af;
+      --border:#22304a;
+      --accent:#22c55e;
+      --accent2:#ef4444;
+      --accent3:#eab308;
+      --shadow:0 14px 40px rgba(0,0,0,.45);
+      --radius:16px;
+      --radius2:12px;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    }
+    *{ box-sizing:border-box; }
+    html,body{ height:100%; }
+    body{
+      margin:0;
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      background: radial-gradient(circle at top, #0f1b38 0%, var(--bg) 60%);
+      color:var(--text);
+    }
+    .wrap{ max-width:1200px; margin:0 auto; padding:18px; }
+    header{
+      display:flex; gap:14px; align-items:flex-start; justify-content:space-between;
+      padding:16px; border:1px solid var(--border); border-radius:var(--radius);
+      background: linear-gradient(180deg, rgba(17,26,46,.95), rgba(15,23,42,.95));
+      box-shadow:var(--shadow);
+    }
+    .h-left h1{ margin:0 0 6px 0; font-size:18px; letter-spacing:.2px; }
+    .h-left .sub{ color:var(--muted); font-size:13px; line-height:1.35; }
+    .h-right{
+      display:flex; flex-wrap:wrap; gap:8px; align-items:center; justify-content:flex-end;
+      min-width:320px;
+    }
+    .btn{
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.04);
+      color:var(--text);
+      padding:10px 12px;
+      border-radius:12px;
+      cursor:pointer;
+      font-weight:600;
+      font-size:13px;
+      transition: transform .06s ease, background .12s ease, border-color .12s ease;
+      white-space:nowrap;
+    }
+    .btn:hover{ background: rgba(255,255,255,.07); border-color:#2b3b5c; }
+    .btn:active{ transform: translateY(1px); }
+    .btn.primary{ border-color: rgba(34,197,94,.35); background: rgba(34,197,94,.14); }
+    .btn.danger{ border-color: rgba(239,68,68,.35); background: rgba(239,68,68,.12); }
+    .btn.warn{ border-color: rgba(234,179,8,.35); background: rgba(234,179,8,.12); }
+    .btn.ghost{ background: transparent; }
+    .btn.small{ padding:8px 10px; border-radius:10px; font-size:12px; }
+    .btn:disabled{ opacity:.55; cursor:not-allowed; }
+
+    .grid{
+      display:grid;
+      grid-template-columns: 420px 1fr;
+      gap:14px;
+      margin-top:14px;
+    }
+    @media (max-width: 980px){
+      .grid{ grid-template-columns:1fr; }
+      .h-right{ min-width:unset; justify-content:flex-start; }
+    }
+
+    .card{
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      background: rgba(17,26,46,.92);
+      box-shadow:var(--shadow);
+      overflow:hidden;
+    }
+    .card .title{
+      padding:12px 14px;
+      border-bottom:1px solid var(--border);
+      display:flex; justify-content:space-between; align-items:center; gap:10px;
+    }
+    .card .title h2{ margin:0; font-size:14px; letter-spacing:.2px; }
+    .card .title .badge{
+      font-size:12px; color:var(--muted);
+      border:1px solid var(--border);
+      padding:6px 10px; border-radius:999px;
+      background: rgba(255,255,255,.03);
+    }
+    .card .body{ padding:14px; }
+
+    label{ display:block; font-size:12px; color:var(--muted); margin:12px 0 6px; }
+    input[type="text"], input[type="number"], input[type="date"], select, textarea{
+      width:100%;
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.03);
+      color:var(--text);
+      padding:10px 10px;
+      border-radius:12px;
+      outline:none;
+      font-size:13px;
+    }
+    textarea{ min-height:92px; resize:vertical; }
+    .row2{ display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+    .row3{ display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; }
+    @media (max-width: 560px){
+      .row2, .row3{ grid-template-columns:1fr; }
+    }
+
+    .inline{
+      display:flex; gap:10px; align-items:center; flex-wrap:wrap;
+      margin-top:10px;
+      padding:10px;
+      border:1px dashed rgba(255,255,255,.10);
+      border-radius:12px;
+      background: rgba(255,255,255,.02);
+    }
+    .toggle{
+      display:flex; align-items:center; gap:8px;
+      padding:8px 10px; border-radius:999px;
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.03);
+      user-select:none;
+    }
+    .toggle input{ transform: translateY(1px); }
+    .hint{ font-size:12px; color:var(--muted); line-height:1.35; margin-top:8px; }
+
+    .tools{
+      display:flex; gap:8px; flex-wrap:wrap; margin-top:14px;
+    }
+
+    /* Listado */
+    .filters{
+      display:grid; grid-template-columns: 1.4fr .8fr .8fr .8fr; gap:10px;
+      margin-bottom:12px;
+    }
+    @media (max-width: 900px){
+      .filters{ grid-template-columns:1fr 1fr; }
+    }
+    @media (max-width: 520px){
+      .filters{ grid-template-columns:1fr; }
+    }
+    .table-wrap{
+      overflow:auto;
+      border:1px solid var(--border);
+      border-radius:var(--radius2);
+      background: rgba(255,255,255,.015);
+    }
+    table{ width:100%; border-collapse:separate; border-spacing:0; min-width:980px; }
+    thead th{
+      position:sticky; top:0;
+      background: rgba(15,23,42,.95);
+      border-bottom:1px solid var(--border);
+      text-align:left;
+      font-size:12px; color:var(--muted);
+      padding:10px 10px;
+      white-space:nowrap;
+    }
+    tbody td{
+      border-bottom:1px solid rgba(255,255,255,.06);
+      padding:10px 10px;
+      font-size:13px;
+      vertical-align:top;
+    }
+    tbody tr:hover{ background: rgba(255,255,255,.03); }
+    .mono{ font-family:var(--mono); font-size:12px; color:#cbd5e1; }
+    .pill{
+      display:inline-flex; align-items:center; gap:6px;
+      padding:6px 10px; border-radius:999px;
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.03);
+      font-size:12px; color:#d1d5db;
+      white-space:nowrap;
+    }
+    .pill.ok{ border-color: rgba(34,197,94,.35); background: rgba(34,197,94,.12); }
+    .pill.bad{ border-color: rgba(239,68,68,.35); background: rgba(239,68,68,.12); }
+    .pill.warn{ border-color: rgba(234,179,8,.35); background: rgba(234,179,8,.12); }
+    .actions{ display:flex; gap:6px; flex-wrap:wrap; }
+    .muted{ color:var(--muted); }
+
+    .attachments{
+      display:flex; gap:8px; flex-wrap:wrap; margin-top:8px;
+    }
+    .att{
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.02);
+      border-radius:12px;
+      padding:8px 10px;
+      max-width: 100%;
+      min-width: 220px;
+    }
+    .att .name{ font-size:12px; font-weight:700; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    .att .meta{ font-size:12px; color:var(--muted); margin-top:4px; display:flex; gap:10px; flex-wrap:wrap; }
+    .att .preview{ margin-top:8px; }
+    .att img{ max-width:180px; max-height:120px; border-radius:10px; border:1px solid rgba(255,255,255,.10); display:block; }
+
+    .toast{
+      position:fixed; right:18px; bottom:18px;
+      max-width: min(520px, calc(100vw - 36px));
+      padding:12px 14px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(15,23,42,.96);
+      box-shadow:var(--shadow);
+      color:var(--text);
+      display:none;
+      z-index:9999;
+    }
+    .toast .t-title{ font-weight:800; font-size:13px; margin-bottom:4px; }
+    .toast .t-body{ font-size:13px; color:#d1d5db; line-height:1.35; }
+    .toast.show{ display:block; animation: pop .12s ease; }
+    @keyframes pop{ from{ transform:translateY(6px); opacity:.65; } to{ transform:translateY(0); opacity:1; } }
+
+    .footer-note{
+      margin-top:12px;
+      padding:10px 12px;
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:14px;
+      background: rgba(255,255,255,.02);
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.35;
+    }
+
+    input[type="file"]{
+      width:100%;
+      padding:10px;
+      border:1px dashed rgba(255,255,255,.14);
+      border-radius:12px;
+      background: rgba(255,255,255,.02);
+      color:var(--muted);
+    }
+
+    .hr{ height:1px; background: rgba(255,255,255,.08); margin:12px 0; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="h-left">
+        <h1>Libreta de Mantenimiento – Centros de recogida de aceituna</h1>
+        <div class="sub">
+          Guarda, busca, edita y borra anotaciones por centro. Adjunta fotos/documentos dentro de la propia app (Base64).<br>
+          Exporta en JSON (con adjuntos), CSV para Excel (sin Base64) y copia al portapapeles (pegable en Excel).
+        </div>
+      </div>
+      <div class="h-right">
+        <button class="btn primary" id="btnExportJson">EXPORTAR JSON</button>
+        <button class="btn" id="btnExportCsv">EXPORTAR EXCEL (CSV)</button>
+        <button class="btn" id="btnExportClipboard">EXPORTAR PORTAPAPELES</button>
+        <button class="btn warn" id="btnImport">IMPORTAR</button>
+        <input type="file" id="importFile" accept="application/json" style="display:none" />
+      </div>
+    </header>
+
+    <div class="grid">
+      <!-- Formulario -->
+      <section class="card">
+        <div class="title">
+          <h2>Alta / Edición</h2>
+          <div class="badge" id="editBadge">Modo: Alta</div>
+        </div>
+        <div class="body">
+          <form id="form">
+            <div class="row2">
+              <div>
+                <label for="poblacion">POBLACIÓN</label>
+                <input id="poblacion" type="text" placeholder="Ej.: Daimiel" required />
+              </div>
+              <div>
+                <label for="centro">CENTRO DE TRABAJO</label>
+                <input id="centro" type="text" placeholder="Ej.: Centro Daimiel (Línea 1)" required />
+              </div>
+            </div>
+
+            <label for="ubicacion">UBICACIÓN EN EL CENTRO</label>
+            <input id="ubicacion" type="text" placeholder="Ej.: Cinta principal, tolva, elevador, cuadro general..." />
+
+            <!-- Campos recomendados para buscar (imprescindibles en la práctica) -->
+            <div class="row2">
+              <div>
+                <label for="categoria">CATEGORÍA (motor/polea/rodillo...)</label>
+                <select id="categoria">
+                  <option value="">(Sin categoría)</option>
+                  <option>Motor</option>
+                  <option>Polea</option>
+                  <option>Rodillo</option>
+                  <option>Cinta</option>
+                  <option>Reductor</option>
+                  <option>Rodamiento</option>
+                  <option>Cuadro eléctrico</option>
+                  <option>Sensor</option>
+                  <option>Vibrador</option>
+                  <option>Otros</option>
+                </select>
+              </div>
+              <div>
+                <label for="referencia">REFERENCIA</label>
+                <input id="referencia" type="text" placeholder="Ej.: 3~ 1.5kW 1500rpm / Ref fabricante / Código interno" />
+              </div>
+            </div>
+
+            <label for="medidas">MEDIDAS / ESPECIFICACIONES</label>
+            <textarea id="medidas" placeholder="Ej.: Motor 1.5 kW, 230/400V, 50Hz, 1500 rpm, B3 · Rodillo Ø80 x 620mm · Polea SPB..." ></textarea>
+
+            <div class="row3">
+              <div>
+                <label for="estado">ESTADO (general)</label>
+                <select id="estado">
+                  <option value="OK">OK</option>
+                  <option value="Pendiente">Pendiente</option>
+                  <option value="Urgente">Urgente</option>
+                  <option value="Sustituido">Sustituido</option>
+                  <option value="Baja">Baja</option>
+                </select>
+              </div>
+              <div>
+                <label>REPARADO / REPARAR</label>
+                <div class="inline" style="margin-top:0;">
+                  <label class="toggle" style="margin:0;">
+                    <input type="radio" name="rep" id="repReparado" value="Reparado" />
+                    Reparado
+                  </label>
+                  <label class="toggle" style="margin:0;">
+                    <input type="radio" name="rep" id="repReparar" value="Reparar" />
+                    Reparar
+                  </label>
+                  <label class="toggle" style="margin:0;">
+                    <input type="radio" name="rep" id="repNA" value="N/A" checked />
+                    N/A
+                  </label>
+                </div>
+              </div>
+              <div>
+                <label for="fecha">FECHA</label>
+                <input id="fecha" type="date" />
+              </div>
+            </div>
+
+            <label for="herramientas">HERRAMIENTAS PARA ESA REPARACIÓN</label>
+            <input id="herramientas" type="text" placeholder="Ej.: llaves 13/17, extractor rodamientos, polímetro, grasa..." />
+
+            <label for="notas">NOTAS</label>
+            <textarea id="notas" placeholder="Detalles, incidencias, pasos realizados, observaciones..." ></textarea>
+
+            <div class="hr"></div>
+
+            <label for="adjuntos">FOTOS / DOCUMENTOS (se guardan dentro de la app)</label>
+            <input id="adjuntos" type="file" multiple />
+            <div class="hint">
+              Límite recomendado por archivo: <b id="limitFileLabel"></b>. Límite total recomendado (aprox.): <b id="limitTotalLabel"></b>.<br>
+              Nota: en CSV/Portapapeles se exporta solo un resumen de adjuntos (no el Base64).
+            </div>
+
+            <div id="attachmentsPreview" class="attachments"></div>
+
+            <div class="tools">
+              <button type="submit" class="btn primary" id="btnSave">Guardar</button>
+              <button type="button" class="btn" id="btnClear">Limpiar</button>
+              <button type="button" class="btn danger" id="btnCancelEdit" disabled>Cancelar edición</button>
+            </div>
+
+            <div class="footer-note">
+              Almacenamiento: IndexedDB (más fiable para adjuntos que localStorage). Puedes hacer copias con “EXPORTAR JSON”.
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <!-- Listado -->
+      <section class="card">
+        <div class="title">
+          <h2>Registros</h2>
+          <div class="badge" id="statsBadge">0 registros</div>
+        </div>
+        <div class="body">
+          <div class="filters">
+            <div>
+              <label for="q">BÚSQUEDA (texto libre)</label>
+              <input id="q" type="text" placeholder="Busca por población, centro, referencia, medidas, notas, herramientas..." />
+            </div>
+            <div>
+              <label for="fPoblacion">FILTRAR POBLACIÓN</label>
+              <select id="fPoblacion"><option value="">Todas</option></select>
+            </div>
+            <div>
+              <label for="fCentro">FILTRAR CENTRO</label>
+              <select id="fCentro"><option value="">Todos</option></select>
+            </div>
+            <div>
+              <label for="fCategoria">FILTRAR CATEGORÍA</label>
+              <select id="fCategoria">
+                <option value="">Todas</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="filters" style="margin-top:-2px;">
+            <div>
+              <label for="fEstado">FILTRAR ESTADO</label>
+              <select id="fEstado">
+                <option value="">Todos</option>
+                <option value="OK">OK</option>
+                <option value="Pendiente">Pendiente</option>
+                <option value="Urgente">Urgente</option>
+                <option value="Sustituido">Sustituido</option>
+                <option value="Baja">Baja</option>
+              </select>
+            </div>
+            <div>
+              <label for="fReparacion">FILTRAR REPARADO/REPARAR</label>
+              <select id="fReparacion">
+                <option value="">Todos</option>
+                <option value="Reparado">Reparado</option>
+                <option value="Reparar">Reparar</option>
+                <option value="N/A">N/A</option>
+              </select>
+            </div>
+            <div>
+              <label for="sortBy">ORDENAR</label>
+              <select id="sortBy">
+                <option value="updated_desc">Última modificación (desc)</option>
+                <option value="date_desc">Fecha (desc)</option>
+                <option value="date_asc">Fecha (asc)</option>
+                <option value="poblacion_asc">Población (A–Z)</option>
+                <option value="centro_asc">Centro (A–Z)</option>
+                <option value="categoria_asc">Categoría (A–Z)</option>
+              </select>
+            </div>
+            <div style="display:flex; align-items:flex-end; gap:8px;">
+              <button class="btn small" id="btnResetFilters" type="button" style="width:100%;">Reset filtros</button>
+            </div>
+          </div>
+
+          <div class="table-wrap" style="margin-top:12px;">
+            <table>
+              <thead>
+                <tr>
+                  <th>Fecha</th>
+                  <th>Población</th>
+                  <th>Centro</th>
+                  <th>Ubicación</th>
+                  <th>Categoría</th>
+                  <th>Referencia</th>
+                  <th>Estado</th>
+                  <th>Rep.</th>
+                  <th>Adjuntos</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody id="tbody">
+                <tr><td colspan="10" class="muted">Cargando…</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="footer-note">
+            Sugerencia: para placas de motor, sube una foto y pega en “Referencia” el modelo o código. Luego podrás buscar por ese texto.
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <div class="toast" id="toast">
+      <div class="t-title" id="toastTitle">Info</div>
+      <div class="t-body" id="toastBody"></div>
+    </div>
+  </div>
+
+<script>
+(() => {
+  "use strict";
+
+  // =============================
+  // Configuración (ajustable)
+  // =============================
+  const CFG = {
+    DB_NAME: "libreta_mantenimiento_db",
+    DB_VERSION: 1,
+    STORE: "records",
+    MAX_FILE_BYTES: 5 * 1024 * 1024,      // 5 MB por archivo (recomendado)
+    MAX_TOTAL_BYTES: 30 * 1024 * 1024,    // 30 MB total (aprox. recomendado)
+    DATE_LOCALE: "es-ES",
+  };
+
+  // =============================
+  // Utilidades
+  // =============================
+  const $ = (id) => document.getElementById(id);
+
+  function nowISO() { return new Date().toISOString(); }
+
+  function bytesToHuman(n){
+    const units = ["B","KB","MB","GB"];
+    let i = 0, v = n;
+    while(v >= 1024 && i < units.length-1){ v/=1024; i++; }
+    return (i===0? v : v.toFixed(1)) + " " + units[i];
+  }
+
+  function safeText(s){
+    return (s ?? "").toString().trim();
+  }
+
+  function dateToISODateInputValue(d){
+    // d puede ser Date o ISO string o vacío
+    if(!d) return "";
+    const dt = (d instanceof Date) ? d : new Date(d);
+    if(Number.isNaN(dt.getTime())) return "";
+    const y = dt.getFullYear();
+    const m = String(dt.getMonth()+1).padStart(2,"0");
+    const da = String(dt.getDate()).padStart(2,"0");
+    return `${y}-${m}-${da}`;
+  }
+
+  function formatDateForTable(isoOrDate){
+    if(!isoOrDate) return "—";
+    const dt = new Date(isoOrDate);
+    if(Number.isNaN(dt.getTime())) return "—";
+    // Solo fecha (sin hora) para la tabla principal
+    return dt.toLocaleDateString(CFG.DATE_LOCALE);
+  }
+
+  function statusPillClass(estado){
+    switch(estado){
+      case "OK": return "ok";
+      case "Urgente": return "bad";
+      case "Pendiente": return "warn";
+      default: return "";
+    }
+  }
+
+  function showToast(title, body, ms=2600){
+    $("toastTitle").textContent = title;
+    $("toastBody").textContent = body;
+    $("toast").classList.add("show");
+    clearTimeout(showToast._t);
+    showToast._t = setTimeout(() => $("toast").classList.remove("show"), ms);
+  }
+
+  // Escape CSV
+  function csvEscape(val){
+    const s = (val ?? "").toString();
+    if(/[",\n\r;]/.test(s)) return '"' + s.replaceAll('"','""') + '"';
+    return s;
+  }
+
+  // TSV (portapapeles Excel-friendly)
+  function tsvEscape(val){
+    const s = (val ?? "").toString();
+    // Excel tolera tabs, pero si hay saltos de línea los limpiamos
+    return s.replaceAll("\t"," ").replaceAll("\r"," ").replaceAll("\n"," ");
+  }
+
+  // =============================
+  // IndexedDB (wrapper mínimo)
+  // =============================
+  let db = null;
+
+  function openDB(){
+    return new Promise((resolve, reject) => {
+      const req = indexedDB.open(CFG.DB_NAME, CFG.DB_VERSION);
+      req.onupgradeneeded = (e) => {
+        const _db = req.result;
+        if(!_db.objectStoreNames.contains(CFG.STORE)){
+          const store = _db.createObjectStore(CFG.STORE, { keyPath: "id" });
+          store.createIndex("poblacion", "poblacion", { unique:false });
+          store.createIndex("centro", "centro", { unique:false });
+          store.createIndex("categoria", "categoria", { unique:false });
+          store.createIndex("fecha", "fecha", { unique:false });
+          store.createIndex("updatedAt", "updatedAt", { unique:false });
+        }
+      };
+      req.onsuccess = () => resolve(req.result);
+      req.onerror = () => reject(req.error);
+    });
+  }
+
+  function tx(storeName, mode="readonly"){
+    const t = db.transaction([storeName], mode);
+    return t.objectStore(storeName);
+  }
+
+  function idbGetAll(){
+    return new Promise((resolve, reject) => {
+      const store = tx(CFG.STORE, "readonly");
+      const req = store.getAll();
+      req.onsuccess = () => resolve(req.result || []);
+      req.onerror = () => reject(req.error);
+    });
+  }
+
+  function idbPut(record){
+    return new Promise((resolve, reject) => {
+      const store = tx(CFG.STORE, "readwrite");
+      const req = store.put(record);
+      req.onsuccess = () => resolve(true);
+      req.onerror = () => reject(req.error);
+    });
+  }
+
+  function idbDelete(id){
+    return new Promise((resolve, reject) => {
+      const store = tx(CFG.STORE, "readwrite");
+      const req = store.delete(id);
+      req.onsuccess = () => resolve(true);
+      req.onerror = () => reject(req.error);
+    });
+  }
+
+  // =============================
+  // Estado UI
+  // =============================
+  let allRecords = [];
+  let editingId = null;
+  let stagedAttachments = []; // adjuntos seleccionados en el formulario antes de guardar
+
+  // =============================
+  // DOM refs
+  // =============================
+  const DOM = {
+    form: $("form"),
+    editBadge: $("editBadge"),
+
+    poblacion: $("poblacion"),
+    centro: $("centro"),
+    ubicacion: $("ubicacion"),
+    categoria: $("categoria"),
+    referencia: $("referencia"),
+    medidas: $("medidas"),
+    estado: $("estado"),
+    repReparado: $("repReparado"),
+    repReparar: $("repReparar"),
+    repNA: $("repNA"),
+    fecha: $("fecha"),
+    herramientas: $("herramientas"),
+    notas: $("notas"),
+    adjuntos: $("adjuntos"),
+    attachmentsPreview: $("attachmentsPreview"),
+
+    btnSave: $("btnSave"),
+    btnClear: $("btnClear"),
+    btnCancelEdit: $("btnCancelEdit"),
+
+    q: $("q"),
+    fPoblacion: $("fPoblacion"),
+    fCentro: $("fCentro"),
+    fCategoria: $("fCategoria"),
+    fEstado: $("fEstado"),
+    fReparacion: $("fReparacion"),
+    sortBy: $("sortBy"),
+    btnResetFilters: $("btnResetFilters"),
+
+    tbody: $("tbody"),
+    statsBadge: $("statsBadge"),
+
+    btnExportJson: $("btnExportJson"),
+    btnExportCsv: $("btnExportCsv"),
+    btnExportClipboard: $("btnExportClipboard"),
+    btnImport: $("btnImport"),
+    importFile: $("importFile"),
+
+    limitFileLabel: $("limitFileLabel"),
+    limitTotalLabel: $("limitTotalLabel"),
+  };
+
+  DOM.limitFileLabel.textContent = bytesToHuman(CFG.MAX_FILE_BYTES);
+  DOM.limitTotalLabel.textContent = bytesToHuman(CFG.MAX_TOTAL_BYTES);
+
+  // =============================
+  // Adjuntos (Base64)
+  // =============================
+  function getSelectedReparacion(){
+    if(DOM.repReparado.checked) return "Reparado";
+    if(DOM.repReparar.checked) return "Reparar";
+    return "N/A";
+  }
+
+  function setSelectedReparacion(val){
+    DOM.repReparado.checked = (val === "Reparado");
+    DOM.repReparar.checked = (val === "Reparar");
+    DOM.repNA.checked = (!val || val === "N/A");
+  }
+
+  async function fileToDataURL(file){
+    return new Promise((resolve, reject) => {
+      const fr = new FileReader();
+      fr.onload = () => resolve(fr.result);
+      fr.onerror = () => reject(fr.error);
+      fr.readAsDataURL(file);
+    });
+  }
+
+  function totalBytesForAttachments(atts){
+    return (atts || []).reduce((acc, a) => acc + (a.size || 0), 0);
+  }
+
+  function renderStagedAttachments(){
+    const wrap = DOM.attachmentsPreview;
+    wrap.innerHTML = "";
+    if(stagedAttachments.length === 0){
+      return;
+    }
+    stagedAttachments.forEach((a, idx) => {
+      const box = document.createElement("div");
+      box.className = "att";
+      const isImg = (a.type || "").startsWith("image/");
+      box.innerHTML = `
+        <div class="name" title="${a.name}">${a.name}</div>
+        <div class="meta">
+          <span>${a.type || "tipo desconocido"}</span>
+          <span>${bytesToHuman(a.size || 0)}</span>
+        </div>
+        <div class="preview"></div>
+        <div class="actions" style="margin-top:10px;">
+          <button type="button" class="btn small" data-act="open" data-idx="${idx}">Ver/Descargar</button>
+          <button type="button" class="btn small danger" data-act="remove" data-idx="${idx}">Quitar</button>
+        </div>
+      `;
+      const prev = box.querySelector(".preview");
+      if(isImg && a.dataURL){
+        const img = document.createElement("img");
+        img.src = a.dataURL;
+        img.alt = a.name;
+        prev.appendChild(img);
+      } else {
+        prev.innerHTML = `<div class="muted" style="font-size:12px;">(Sin vista previa)</div>`;
+      }
+      wrap.appendChild(box);
+    });
+  }
+
+  async function handleAddAttachments(files){
+    if(!files || files.length === 0) return;
+
+    // Cálculo preventivo: tamaño total (sumamos tamaños originales, Base64 será mayor)
+    const newBytes = Array.from(files).reduce((acc,f) => acc + (f.size||0), 0);
+    const currentBytes = totalBytesForAttachments(stagedAttachments);
+    const projected = currentBytes + newBytes;
+
+    // Aviso por total aproximado
+    if(projected > CFG.MAX_TOTAL_BYTES){
+      showToast("Límite recomendado", "Los adjuntos seleccionados superan el límite total recomendado. Se intentará, pero puede fallar por almacenamiento.", 4200);
+    }
+
+    for(const file of Array.from(files)){
+      if((file.size || 0) > CFG.MAX_FILE_BYTES){
+        showToast("Adjunto demasiado grande", `No se añade "${file.name}" (supera ${bytesToHuman(CFG.MAX_FILE_BYTES)}).`, 4200);
+        continue;
+      }
+      const dataURL = await fileToDataURL(file);
+      stagedAttachments.push({
+        name: file.name,
+        type: file.type,
+        size: file.size,
+        dataURL
+      });
+    }
+    renderStagedAttachments();
+    DOM.adjuntos.value = ""; // reset input
+  }
+
+  DOM.attachmentsPreview.addEventListener("click", (e) => {
+    const btn = e.target.closest("button");
+    if(!btn) return;
+    const act = btn.getAttribute("data-act");
+    const idx = Number(btn.getAttribute("data-idx"));
+    const a = stagedAttachments[idx];
+    if(!a) return;
+
+    if(act === "remove"){
+      stagedAttachments.splice(idx, 1);
+      renderStagedAttachments();
+      return;
+    }
+    if(act === "open"){
+      // Abrir en nueva pestaña (dataURL)
+      const w = window.open();
+      if(!w){
+        showToast("Bloqueado", "El navegador bloqueó la ventana emergente. Permite pop-ups para ver/descargar.", 4200);
+        return;
+      }
+      // Página simple con enlace de descarga
+      const safeName = (a.name || "archivo").replaceAll("<","&lt;").replaceAll(">","&gt;");
+      const html = `
+        <!doctype html><html><head><meta charset="utf-8"><title>${safeName}</title></head>
+        <body style="font-family:system-ui; padding:16px;">
+          <h3 style="margin:0 0 10px 0;">${safeName}</h3>
+          <p style="margin:0 0 12px 0;">Tipo: ${a.type || "desconocido"} · Tamaño: ${bytesToHuman(a.size || 0)}</p>
+          <p><a href="${a.dataURL}" download="${safeName}">Descargar archivo</a></p>
+          ${(a.type||"").startsWith("image/") ? `<img src="${a.dataURL}" style="max-width:100%; border:1px solid #ddd; border-radius:10px;" />` : ""}
+        </body></html>
+      `;
+      w.document.open();
+      w.document.write(html);
+      w.document.close();
+    }
+  });
+
+  DOM.adjuntos.addEventListener("change", async (e) => {
+    try{
+      await handleAddAttachments(e.target.files);
+    }catch(err){
+      console.error(err);
+      showToast("Error", "No se pudieron procesar adjuntos. Intenta con archivos más pequeños.", 4200);
+    }
+  });
+
+  // =============================
+  // CRUD
+  // =============================
+  function resetForm(){
+    editingId = null;
+    DOM.editBadge.textContent = "Modo: Alta";
+    DOM.btnCancelEdit.disabled = true;
+
+    DOM.poblacion.value = "";
+    DOM.centro.value = "";
+    DOM.ubicacion.value = "";
+    DOM.categoria.value = "";
+    DOM.referencia.value = "";
+    DOM.medidas.value = "";
+    DOM.estado.value = "OK";
+    setSelectedReparacion("N/A");
+    DOM.fecha.value = dateToISODateInputValue(new Date()); // hoy por defecto
+    DOM.herramientas.value = "";
+    DOM.notas.value = "";
+    stagedAttachments = [];
+    renderStagedAttachments();
+  }
+
+  function toRecordFromForm(){
+    const poblacion = safeText(DOM.poblacion.value);
+    const centro = safeText(DOM.centro.value);
+
+    if(!poblacion || !centro){
+      throw new Error("POBLACIÓN y CENTRO DE TRABAJO son obligatorios.");
+    }
+
+    const rec = {
+      id: editingId || crypto.randomUUID(),
+      poblacion,
+      centro,
+      ubicacion: safeText(DOM.ubicacion.value),
+      categoria: safeText(DOM.categoria.value),
+      referencia: safeText(DOM.referencia.value),
+      medidas: safeText(DOM.medidas.value),
+      estado: safeText(DOM.estado.value) || "OK",
+      reparacion: getSelectedReparacion(),
+      fecha: DOM.fecha.value ? new Date(DOM.fecha.value + "T00:00:00.000Z").toISOString() : null,
+      herramientas: safeText(DOM.herramientas.value),
+      notas: safeText(DOM.notas.value),
+      attachments: stagedAttachments.map(a => ({...a})),
+      createdAt: null,
+      updatedAt: nowISO(),
+    };
+    return rec;
+  }
+
+  function setFormFromRecord(rec){
+    editingId = rec.id;
+    DOM.editBadge.textContent = "Modo: Edición";
+    DOM.btnCancelEdit.disabled = false;
+
+    DOM.poblacion.value = rec.poblacion || "";
+    DOM.centro.value = rec.centro || "";
+    DOM.ubicacion.value = rec.ubicacion || "";
+    DOM.categoria.value = rec.categoria || "";
+    DOM.referencia.value = rec.referencia || "";
+    DOM.medidas.value = rec.medidas || "";
+    DOM.estado.value = rec.estado || "OK";
+    setSelectedReparacion(rec.reparacion || "N/A");
+    DOM.fecha.value = dateToISODateInputValue(rec.fecha);
+    DOM.herramientas.value = rec.herramientas || "";
+    DOM.notas.value = rec.notas || "";
+
+    stagedAttachments = Array.isArray(rec.attachments) ? rec.attachments.map(a => ({...a})) : [];
+    renderStagedAttachments();
+  }
+
+  async function saveRecord(){
+    const rec = toRecordFromForm();
+    // mantener createdAt si ya existe
+    const existing = allRecords.find(r => r.id === rec.id);
+    rec.createdAt = existing?.createdAt || nowISO();
+
+    // Aviso por tamaño total aproximado de adjuntos en el registro
+    const attBytes = totalBytesForAttachments(rec.attachments);
+    if(attBytes > CFG.MAX_TOTAL_BYTES){
+      showToast("Aviso de tamaño", "Este registro tiene muchos adjuntos. Si notas fallos, reduce tamaño/número de archivos.", 5200);
+    }
+
+    await idbPut(rec);
+    showToast("Guardado", editingId ? "Registro actualizado." : "Registro creado.");
+    await reload();
+    resetForm();
+  }
+
+  async function deleteRecord(id){
+    const rec = allRecords.find(r => r.id === id);
+    const label = rec ? `${rec.poblacion} · ${rec.centro}` : "este registro";
+    const ok = confirm(`¿Seguro que quieres borrar ${label}?\n\nEsta acción no se puede deshacer.`);
+    if(!ok) return;
+    await idbDelete(id);
+    showToast("Borrado", "Registro eliminado.");
+    await reload();
+    resetForm();
+  }
+
+  DOM.form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    try{
+      await saveRecord();
+    }catch(err){
+      console.error(err);
+      showToast("Error", err?.message || "No se pudo guardar.");
+    }
+  });
+
+  DOM.btnClear.addEventListener("click", () => resetForm());
+  DOM.btnCancelEdit.addEventListener("click", () => resetForm());
+
+  // =============================
+  // Filtros, orden y render
+  // =============================
+  function uniqueSorted(arr){
+    return Array.from(new Set(arr.filter(Boolean))).sort((a,b) => a.localeCompare(b, "es", { sensitivity:"base" }));
+  }
+
+  function refreshFilterOptions(){
+    const poblaciones = uniqueSorted(allRecords.map(r => r.poblacion));
+    const centros = uniqueSorted(allRecords.map(r => r.centro));
+    const categorias = uniqueSorted(allRecords.map(r => r.categoria));
+
+    function setOptions(selectEl, values, keepCurrent=true){
+      const cur = keepCurrent ? selectEl.value : "";
+      selectEl.innerHTML = `<option value="">${selectEl === DOM.fPoblacion ? "Todas" : (selectEl === DOM.fCentro ? "Todos" : "Todas")}</option>`;
+      values.forEach(v => {
+        const opt = document.createElement("option");
+        opt.value = v;
+        opt.textContent = v;
+        selectEl.appendChild(opt);
+      });
+      if(keepCurrent){
+        selectEl.value = cur;
+        // si el valor ya no existe, se quedará en ""
+        if(selectEl.value !== cur) selectEl.value = "";
+      }
+    }
+
+    setOptions(DOM.fPoblacion, poblaciones);
+    setOptions(DOM.fCentro, centros);
+
+    // Categorías: también incluimos las predefinidas del formulario por si aún no hay registros
+    const baseCats = Array.from(DOM.categoria.options).map(o => o.value).filter(Boolean);
+    const mergedCats = uniqueSorted([...baseCats, ...categorias]);
+    DOM.fCategoria.innerHTML = `<option value="">Todas</option>`;
+    mergedCats.forEach(v => {
+      const opt = document.createElement("option");
+      opt.value = v;
+      opt.textContent = v;
+      DOM.fCategoria.appendChild(opt);
+    });
+  }
+
+  function applyFilters(records){
+    const q = safeText(DOM.q.value).toLowerCase();
+    const fp = DOM.fPoblacion.value;
+    const fc = DOM.fCentro.value;
+    const fcat = DOM.fCategoria.value;
+    const fest = DOM.fEstado.value;
+    const frep = DOM.fReparacion.value;
+
+    return records.filter(r => {
+      if(fp && r.poblacion !== fp) return false;
+      if(fc && r.centro !== fc) return false;
+      if(fcat && (r.categoria || "") !== fcat) return false;
+      if(fest && (r.estado || "") !== fest) return false;
+      if(frep && (r.reparacion || "N/A") !== frep) return false;
+
+      if(q){
+        const hay = [
+          r.poblacion, r.centro, r.ubicacion, r.categoria, r.referencia,
+          r.medidas, r.estado, r.reparacion, r.herramientas, r.notas
+        ].join(" ").toLowerCase();
+        if(!hay.includes(q)) return false;
+      }
+      return true;
+    });
+  }
+
+  function applySort(records){
+    const mode = DOM.sortBy.value;
+    const copy = records.slice();
+    const coll = new Intl.Collator("es", { sensitivity:"base" });
+
+    copy.sort((a,b) => {
+      switch(mode){
+        case "updated_desc":
+          return (new Date(b.updatedAt || 0)) - (new Date(a.updatedAt || 0));
+        case "date_desc":
+          return (new Date(b.fecha || 0)) - (new Date(a.fecha || 0));
+        case "date_asc":
+          return (new Date(a.fecha || 0)) - (new Date(b.fecha || 0));
+        case "poblacion_asc":
+          return coll.compare(a.poblacion || "", b.poblacion || "");
+        case "centro_asc":
+          return coll.compare(a.centro || "", b.centro || "");
+        case "categoria_asc":
+          return coll.compare(a.categoria || "", b.categoria || "");
+        default:
+          return 0;
+      }
+    });
+    return copy;
+  }
+
+  function renderTable(records){
+    const tb = DOM.tbody;
+    tb.innerHTML = "";
+    if(records.length === 0){
+      tb.innerHTML = `<tr><td colspan="10" class="muted">No hay resultados con los filtros actuales.</td></tr>`;
+      return;
+    }
+
+    records.forEach(r => {
+      const tr = document.createElement("tr");
+      const attCount = Array.isArray(r.attachments) ? r.attachments.length : 0;
+
+      tr.innerHTML = `
+        <td>${formatDateForTable(r.fecha)}</td>
+        <td><div style="font-weight:700;">${escapeHtml(r.poblacion)}</div></td>
+        <td>${escapeHtml(r.centro)}</td>
+        <td class="muted">${escapeHtml(r.ubicacion || "—")}</td>
+        <td>${r.categoria ? `<span class="pill">${escapeHtml(r.categoria)}</span>` : `<span class="muted">—</span>`}</td>
+        <td>${r.referencia ? `<span class="mono">${escapeHtml(r.referencia)}</span>` : `<span class="muted">—</span>`}</td>
+        <td><span class="pill ${statusPillClass(r.estado)}">${escapeHtml(r.estado || "—")}</span></td>
+        <td>${r.reparacion && r.reparacion !== "N/A" ? `<span class="pill ${r.reparacion==="Reparado"?"ok":"warn"}">${escapeHtml(r.reparacion)}</span>` : `<span class="muted">—</span>`}</td>
+        <td>${attCount ? `<span class="pill">${attCount} adj.</span> <button class="btn small ghost" data-act="view" data-id="${r.id}">Ver</button>` : `<span class="muted">—</span>`}</td>
+        <td>
+          <div class="actions">
+            <button class="btn small" data-act="edit" data-id="${r.id}">Editar</button>
+            <button class="btn small danger" data-act="del" data-id="${r.id}">Borrar</button>
+          </div>
+        </td>
+      `;
+      tb.appendChild(tr);
+    });
+  }
+
+  function escapeHtml(s){
+    return (s ?? "").toString()
+      .replaceAll("&","&amp;")
+      .replaceAll("<","&lt;")
+      .replaceAll(">","&gt;")
+      .replaceAll('"',"&quot;")
+      .replaceAll("'","&#039;");
+  }
+
+  DOM.tbody.addEventListener("click", (e) => {
+    const btn = e.target.closest("button");
+    if(!btn) return;
+    const act = btn.getAttribute("data-act");
+    const id = btn.getAttribute("data-id");
+    const rec = allRecords.find(r => r.id === id);
+    if(!rec) return;
+
+    if(act === "edit"){
+      setFormFromRecord(rec);
+      showToast("Edición", "Registro cargado en el formulario.");
+      // scroll arriba si en móvil
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      return;
+    }
+    if(act === "del"){
+      deleteRecord(id).catch(err => {
+        console.error(err);
+        showToast("Error", "No se pudo borrar.");
+      });
+      return;
+    }
+    if(act === "view"){
+      openAttachmentsViewer(rec);
+      return;
+    }
+  });
+
+  function openAttachmentsViewer(rec){
+    const atts = Array.isArray(rec.attachments) ? rec.attachments : [];
+    if(atts.length === 0){
+      showToast("Adjuntos", "Este registro no tiene adjuntos.");
+      return;
+    }
+    const w = window.open();
+    if(!w){
+      showToast("Bloqueado", "El navegador bloqueó la ventana emergente. Permite pop-ups para ver/descargar.", 4200);
+      return;
+    }
+    const items = atts.map((a, i) => {
+      const isImg = (a.type || "").startsWith("image/");
+      const name = escapeHtml(a.name || ("archivo_" + (i+1)));
+      const type = escapeHtml(a.type || "desconocido");
+      const size = bytesToHuman(a.size || 0);
+      const img = (isImg && a.dataURL) ? `<img src="${a.dataURL}" style="max-width:240px; max-height:160px; border:1px solid #ddd; border-radius:12px; display:block; margin-top:8px;">` : "";
+      return `
+        <div style="border:1px solid #e5e7eb22; border-radius:14px; padding:12px; margin:12px 0; background:#0f172a;">
+          <div style="font-weight:800;">${name}</div>
+          <div style="color:#9ca3af; margin-top:4px; font-size:13px;">${type} · ${size}</div>
+          <div style="margin-top:10px;">
+            <a href="${a.dataURL}" download="${name}" style="display:inline-block; padding:8px 10px; border-radius:12px; border:1px solid #22304a; color:#e5e7eb; text-decoration:none;">
+              Descargar
+            </a>
+          </div>
+          ${img}
+        </div>
+      `;
+    }).join("");
+
+    const header = `
+      <div style="padding:14px; border:1px solid #22304a; border-radius:16px; background:#111a2e;">
+        <div style="font-weight:900;">Adjuntos</div>
+        <div style="color:#9ca3af; margin-top:6px;">
+          ${escapeHtml(rec.poblacion)} · ${escapeHtml(rec.centro)} · ${escapeHtml(rec.ubicacion || "")}
+        </div>
+      </div>
+    `;
+
+    const html = `
+      <!doctype html><html><head><meta charset="utf-8"><title>Adjuntos</title></head>
+      <body style="margin:0; font-family:system-ui; background:#0b1220; color:#e5e7eb; padding:16px;">
+        ${header}
+        ${items}
+        <div style="color:#9ca3af; font-size:12px; margin-top:12px;">
+          Nota: estos archivos están incrustados (Base64). Para copia completa usa EXPORTAR JSON.
+        </div>
+      </body></html>
+    `;
+    w.document.open();
+    w.document.write(html);
+    w.document.close();
+  }
+
+  function updateStats(filteredCount){
+    DOM.statsBadge.textContent = `${filteredCount} de ${allRecords.length} registros`;
+  }
+
+  function rerender(){
+    const filtered = applySort(applyFilters(allRecords));
+    refreshFilterOptions();
+    renderTable(filtered);
+    updateStats(filtered.length);
+  }
+
+  // listeners filtros
+  ["input","change"].forEach(evt => {
+    DOM.q.addEventListener(evt, rerender);
+    DOM.fPoblacion.addEventListener(evt, rerender);
+    DOM.fCentro.addEventListener(evt, rerender);
+    DOM.fCategoria.addEventListener(evt, rerender);
+    DOM.fEstado.addEventListener(evt, rerender);
+    DOM.fReparacion.addEventListener(evt, rerender);
+    DOM.sortBy.addEventListener(evt, rerender);
+  });
+
+  DOM.btnResetFilters.addEventListener("click", () => {
+    DOM.q.value = "";
+    DOM.fPoblacion.value = "";
+    DOM.fCentro.value = "";
+    DOM.fCategoria.value = "";
+    DOM.fEstado.value = "";
+    DOM.fReparacion.value = "";
+    DOM.sortBy.value = "updated_desc";
+    rerender();
+  });
+
+  // =============================
+  // Exportaciones / Importación
+  // =============================
+  function downloadText(filename, content, mime="text/plain;charset=utf-8"){
+    const blob = new Blob([content], { type: mime });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 2500);
+  }
+
+  function exportJSON(){
+    const payload = {
+      app: "Libreta Mantenimiento Centros Aceituna",
+      exportedAt: nowISO(),
+      version: 1,
+      records: allRecords
+    };
+    const text = JSON.stringify(payload, null, 2);
+    const fn = `libreta_mantenimiento_${new Date().toISOString().slice(0,10)}.json`;
+    downloadText(fn, text, "application/json;charset=utf-8");
+    showToast("Exportación JSON", "Archivo JSON descargado (incluye adjuntos).");
+  }
+
+  function exportCSV(){
+    // CSV para Excel: usamos ; como separador habitual en ES si el Excel usa coma decimal.
+    // Aun así, Excel suele abrirlo bien. Si prefieres coma, cambia SEP a ','.
+    const SEP = ";";
+    const headers = [
+      "POBLACION","CENTRO DE TRABAJO","UBICACION EN EL CENTRO",
+      "CATEGORIA","REFERENCIA",
+      "MEDIDAS / ESPECIFICACIONES","ESTADO","REPARADO/REPARAR","FECHA",
+      "HERRAMIENTAS","NOTAS",
+      "ADJUNTOS (Nº)","ADJUNTOS (NOMBRES)",
+      "CREATED_AT","UPDATED_AT","ID"
+    ];
+    const lines = [headers.map(csvEscape).join(SEP)];
+
+    allRecords.forEach(r => {
+      const atts = Array.isArray(r.attachments) ? r.attachments : [];
+      const attNames = atts.map(a => a.name).join(" | ");
+      const row = [
+        r.poblacion, r.centro, r.ubicacion,
+        r.categoria, r.referencia,
+        r.medidas, r.estado, r.reparacion, formatDateForTable(r.fecha),
+        r.herramientas, r.notas,
+        atts.length, attNames,
+        r.createdAt, r.updatedAt, r.id
+      ];
+      lines.push(row.map(csvEscape).join(SEP));
+    });
+
+    const fn = `libreta_mantenimiento_${new Date().toISOString().slice(0,10)}.csv`;
+    downloadText(fn, lines.join("\n"), "text/csv;charset=utf-8");
+    showToast("Exportación CSV", "CSV descargado (sin Base64; adjuntos en resumen).");
+  }
+
+  async function exportClipboard(){
+    // TSV pegable en Excel (recomendado)
+    const headers = [
+      "POBLACION","CENTRO DE TRABAJO","UBICACION EN EL CENTRO",
+      "CATEGORIA","REFERENCIA",
+      "MEDIDAS / ESPECIFICACIONES","ESTADO","REPARADO/REPARAR","FECHA",
+      "HERRAMIENTAS","NOTAS",
+      "ADJUNTOS (Nº)","ADJUNTOS (NOMBRES)"
+    ];
+    const rows = [headers.map(tsvEscape).join("\t")];
+
+    allRecords.forEach(r => {
+      const atts = Array.isArray(r.attachments) ? r.attachments : [];
+      const attNames = atts.map(a => a.name).join(" | ");
+      const row = [
+        r.poblacion, r.centro, r.ubicacion,
+        r.categoria, r.referencia,
+        r.medidas, r.estado, r.reparacion, formatDateForTable(r.fecha),
+        r.herramientas, r.notas,
+        atts.length, attNames
+      ];
+      rows.push(row.map(tsvEscape).join("\t"));
+    });
+
+    const text = rows.join("\n");
+    try{
+      await navigator.clipboard.writeText(text);
+      showToast("Portapapeles", "Copiado. Pega directamente en Excel.");
+    }catch(err){
+      console.error(err);
+      // fallback con textarea
+      const ta = document.createElement("textarea");
+      ta.value = text;
+      document.body.appendChild(ta);
+      ta.select();
+      const ok = document.execCommand("copy");
+      ta.remove();
+      if(ok){
+        showToast("Portapapeles", "Copiado (modo compatibilidad). Pega en Excel.");
+      }else{
+        showToast("Error", "No se pudo copiar al portapapeles. Tu navegador puede bloquearlo.");
+      }
+    }
+  }
+
+  async function importJSONFile(file){
+    const text = await file.text();
+    let payload;
+    try{
+      payload = JSON.parse(text);
+    }catch{
+      throw new Error("El archivo no es un JSON válido.");
+    }
+
+    // Aceptamos dos formatos:
+    // 1) { records: [...] }
+    // 2) [...] (array directo)
+    let records = null;
+    if(Array.isArray(payload)) records = payload;
+    else if(payload && Array.isArray(payload.records)) records = payload.records;
+
+    if(!records) throw new Error("El JSON no contiene 'records' o un array de registros.");
+
+    // Validación mínima y normalización
+    const normalized = records.map(r => ({
+      id: r.id || crypto.randomUUID(),
+      poblacion: safeText(r.poblacion),
+      centro: safeText(r.centro),
+      ubicacion: safeText(r.ubicacion),
+      categoria: safeText(r.categoria),
+      referencia: safeText(r.referencia),
+      medidas: safeText(r.medidas),
+      estado: safeText(r.estado) || "OK",
+      reparacion: safeText(r.reparacion) || "N/A",
+      fecha: r.fecha || null,
+      herramientas: safeText(r.herramientas),
+      notas: safeText(r.notas),
+      attachments: Array.isArray(r.attachments) ? r.attachments.map(a => ({
+        name: safeText(a.name),
+        type: safeText(a.type),
+        size: Number(a.size || 0),
+        dataURL: a.dataURL || ""
+      })) : [],
+      createdAt: r.createdAt || nowISO(),
+      updatedAt: nowISO(),
+    }));
+
+    // Estrategia de importación: REEMPLAZAR TODO (más simple y evita duplicados)
+    // Si prefieres "fusionar", se puede cambiar.
+    const ok = confirm(
+      `Vas a importar ${normalized.length} registros.\n\n` +
+      `Esto REEMPLAZARÁ el contenido actual.\n\n¿Continuar?`
+    );
+    if(!ok) return;
+
+    // Borrado total: recorremos y eliminamos. (IndexedDB no tiene truncate directo simple aquí)
+    // Para no complicar con clear(), abrimos transacción y usamos clear.
+    await new Promise((resolve, reject) => {
+      const store = tx(CFG.STORE, "readwrite");
+      const req = store.clear();
+      req.onsuccess = () => resolve(true);
+      req.onerror = () => reject(req.error);
+    });
+
+    for(const r of normalized){
+      await idbPut(r);
+    }
+
+    showToast("Importación", "Importación completada.");
+    await reload();
+    resetForm();
+  }
+
+  DOM.btnExportJson.addEventListener("click", exportJSON);
+  DOM.btnExportCsv.addEventListener("click", exportCSV);
+  DOM.btnExportClipboard.addEventListener("click", exportClipboard);
+
+  DOM.btnImport.addEventListener("click", () => DOM.importFile.click());
+  DOM.importFile.addEventListener("change", async (e) => {
+    const file = e.target.files?.[0];
+    if(!file) return;
+    try{
+      await importJSONFile(file);
+    }catch(err){
+      console.error(err);
+      showToast("Error importando", err?.message || "No se pudo importar.");
+    }finally{
+      DOM.importFile.value = "";
+    }
+  });
+
+  // =============================
+  // Carga inicial
+  // =============================
+  async function reload(){
+    allRecords = await idbGetAll();
+    rerender();
+  }
+
+  async function init(){
+    try{
+      db = await openDB();
+      resetForm();
+      await reload();
+      showToast("Listo", "Libreta cargada.");
+    }catch(err){
+      console.error(err);
+      DOM.tbody.innerHTML = `<tr><td colspan="10" class="muted">Error al abrir la base de datos. Revisa el navegador o permisos.</td></tr>`;
+      showToast("Error", "No se pudo iniciar la base de datos (IndexedDB).");
+    }
+  }
+
+  init();
+
+})();
+</script>
+</body>
+</html>
